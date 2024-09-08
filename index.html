@@ -15,21 +15,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="script.js"></script>
     <link rel="stylesheet" href="style.css">
-    <script>
-        function allowDrop(ev) {
-            ev.preventDefault();
-        }
-
-        function drag(ev) {
-            ev.dataTransfer.setData("text", ev.target.id);
-        }
-
-        function drop(ev) {
-            ev.preventDefault();
-            var data = ev.dataTransfer.getData("text");
-            ev.target.appendChild(document.getElementById(data));
-        }
-    </script>
 </head>
 
 <body>
@@ -39,22 +24,11 @@
     <div id="timeTable">
         <div id="timeTableHeader">Timetable</div>
         <div id="timeTableDays">
-            <div class="day" id="monday">
-                
-    
-            </div>
-            <div class="day" id="tuesday">
-    
-            </div>
-            <div class="day" id="wednesday">
-    
-            </div>
-            <div class="day" id="thursday">
-    
-            </div>
-            <div class="day" id="friday">
-    
-            </div>
+            <div class="day" id="monday"></div>
+            <div class="day" id="tuesday"></div>
+            <div class="day" id="wednesday"></div>
+            <div class="day" id="thursday"></div>
+            <div class="day" id="friday"></div>
         </div>
     </div>
     <script>

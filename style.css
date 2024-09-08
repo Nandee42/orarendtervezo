@@ -6,13 +6,6 @@ body {
     height: 100vh;
     padding: 3%;
 }
-#subjectContainer {
-    width: 40%;
-    height: 100%;
-    background-color: rgb(30, 30, 30);
-    border-top-left-radius: 20px;
-    border-bottom-left-radius: 20px;
-}
 #timeTable {
     display: flex;
     flex-flow: column;
@@ -49,5 +42,24 @@ body {
     width: 100%;
     position: absolute;
     background-color: rgb(66, 175, 81);
+    border-radius: 10px;
+}
+#subjectContainer {
+    width: 40%;
+    height: 100%;
+    padding: 1% 1%;
+    display: flex;
+    background-color: rgb(30, 30, 30);
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+.subject {
+    width: 20%;
+    height: 10%;
+    display: flex;
+    margin: 5% 2%;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(76, 149, 179);
     border-radius: 10px;
 }

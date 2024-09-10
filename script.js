@@ -5,73 +5,27 @@ $(document).ready(function () {
             .text(subject.name)
             .data("id", subject.id)
             .mousedown(function () {
-                showCourses(subject.courses);
+                dropSubject(subject);
+                showCourses(subject);
             })
-            .data("id", subject.id)
+            .mouseup(function () {
+                hideCourses(subject);
+            })
             .on("dragend", function (event) {
-                hideCourses(subject.courses);
+                hideCourses(subject);
             });
+            console.log(subject.id);
 
         $("#subjectContainer").append(subjectDiv);
     });
+    $("#subjectContainer").click(function () {
+        console.log(addedCourses);
+    });
+
 });
 
-function showCourses(courses) {
-    courses.forEach(course => {
-        const courseDiv = $("<div class=\"course\" id='" + course.id + "' ondrop='drop(event)' ondragover='allowDrop(event)'></div>")
-            .text(course.name)
-            .data("slot", true);
 
-        // TODO: add collision check
-
-        const startTime = parseInt(course.startTime.split(":")[0]);
-        const endTime = parseInt(course.endTime.split(":")[0]);
-        const totalDuration = 20 - 8; // Duration of the day in hours (8:00 - 16:00)
-        // Calculate the percent value of the timestamps
-        const startPercentage = ((startTime - 8) / totalDuration) * 100;
-        const endPercentage = ((endTime - 8) / totalDuration) * 100;
-
-        // Set the position and size of the course div
-        courseDiv.css("top", startPercentage + "%");
-        courseDiv.css("height", endPercentage - startPercentage + "%");
-
-        $(`#${course.day}`).append(courseDiv);
-    });
-}
-
-function hideCourses(courses) {
-    courses.forEach(course => {
-        if ($(`#${course.id}`).length && $(`#${course.id}`).data("slot") === true) {
-            $(`#${course.id}`).remove();
-        }
-        //$(`#${course.day}`).children().each(function () {
-        //    if ($(this).data("id") === course.id && $(this).data("slot") === true) {
-        //        $(this).remove();
-        //    }
-        //});
-    });
-}
-
-function allowDrop(ev) {
-    ev.preventDefault();
-}
-
-function drag(ev) {
-    ev.dataTransfer.setData("text", ev.target.id);
-}
-
-function drop(ev) {
-    ev.preventDefault();
-    var subjectId = ev.dataTransfer.getData("text");
-    var courseId = ev.target.id;
-
-    if ($(ev.target).hasClass("course")) {
-        var courseDiv = $("#" + courseId);
-
-        courseDiv.data("slot", false);
-        courseDiv.data("subjectId", subjectId);
-    }
-}
+var addedCourses = [];
 
 const subjects = [
     {
@@ -231,3 +185,130 @@ const subjects = [
     }
 
 ];
+
+function showCourses(subject) {
+    subject.courses.forEach(course => {
+        if (canAddCourseToTimetable(course)) {
+            var courseDiv = $("<div class=\"course\" id='" + course.id + "' ondrop='drop(event)' ondragover='allowDrop(event)' draggable='true' ondragstart='drag(event)'></div>")
+                .text(course.name)
+                .data("slot", true)
+                .data("subjectId", subject.id)
+                .mousedown(function () {
+                    dropSubject(subject);
+                    showCourses(subject);
+                })
+                .mouseup(function () {
+                    hideCourses(subject);
+                })
+                .on("dragend", function (event) {
+                    hideCourses(subject);
+                });
+
+        }
+        else {
+            var courseDiv = $("<div class='course wrong' id='" + course.id + "'></div>")
+                .text(course.name)
+                .fadeIn(1000, function () {
+                    $(this).fadeOut(1000, function () {
+                        $(this).remove();
+                    });
+                });
+        }
+
+
+        const startTime = parseInt(course.startTime.split(":")[0]);
+        const endTime = parseInt(course.endTime.split(":")[0]);
+        const totalDuration = 20 - 8; // Duration of the day in hours (8:00 - 20:00)
+        // Calculate the percent value of the timestamps
+        const startPercentage = ((startTime - 8) / totalDuration) * 100;
+        const endPercentage = ((endTime - 8) / totalDuration) * 100;
+
+        // Set the position and size of the course div
+        courseDiv.css("top", startPercentage + "%");
+        courseDiv.css("height", endPercentage - startPercentage + "%");
+
+        $(`#${course.day}`).append(courseDiv);
+    });
+}
+
+function canAddCourseToTimetable(course) {
+    const startTime = parseInt(course.startTime.split(":")[0]);
+    const endTime = parseInt(course.endTime.split(":")[0]);
+
+    for (let i = 0; i < addedCourses.length; i++) {
+        const addedCourse = addedCourses[i];
+        const addedStartTime = parseInt(addedCourse.startTime.split(":")[0]);
+        const addedEndTime = parseInt(addedCourse.endTime.split(":")[0]);
+
+        if (course.day === addedCourse.day && (startTime >= addedStartTime && startTime < addedEndTime || endTime > addedStartTime && endTime <= addedEndTime)) {
+
+            return false;
+
+        }
+    }
+
+    return true; // Course does not collide with any existing courses
+}
+
+function hideCourses(subject) {
+    subject.courses.forEach(course => {
+        if ($(`#${course.id}`).length && $(`#${course.id}`).data("slot") === true) {
+            $(`#${course.id}`).remove();
+        }
+        //$(`#${course.day}`).children().each(function () {
+        //    if ($(this).data("id") === course.id && $(this).data("slot") === true) {
+        //        $(this).remove();
+        //    }
+        //});
+    });
+}
+
+function dropSubject(subject) {
+    subject.courses.forEach(course => {
+        const courseElement = document.getElementById(course.id);
+        if (courseElement) {
+            courseElement.remove();
+            addedCourses = addedCourses.filter(c => c.id !== course.id);
+        }
+    });
+}
+
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drag(ev) {
+    //ev.preventDefault();
+    if ($(ev.target).hasClass("subject")) {
+        ev.dataTransfer.setData("id", $(ev.target).data("id"));
+        console.log($(ev.target).data("id"));
+    } else if ($(ev.target).hasClass("course")) {
+        ev.dataTransfer.setData("id", $(ev.target).data("subjectId"));
+    }
+}
+
+function drop(ev) {
+    //ev.preventDefault();
+    var subjectId = ev.dataTransfer.getData("id");
+    var courseId = $(ev.target).attr("id");
+
+    console.log(subjectId);
+    console.log(subjects);
+
+    const course = subjects[subjectId - 1].courses.find(course => course.id === parseInt(courseId));
+
+    if (course && $(ev.target).hasClass("course")) {
+        var courseDiv = $("#" + courseId);
+
+        courseDiv.data("slot", false);
+        courseDiv.data("subjectId", subjectId);
+        courseDiv.addClass("added");
+        addedCourses.push(course);
+    }
+    
+}
+function notify(message){
+    
+}
+
+

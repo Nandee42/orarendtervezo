@@ -44,6 +44,12 @@ body {
     background-color: rgb(66, 175, 81);
     border-radius: 10px;
 }
+.added{
+    background-color: rgb(44, 75, 209);
+}
+.wrong{
+    background-color: rgb(209, 44, 44);
+}
 #subjectContainer {
     width: 40%;
     height: 100%;
@@ -60,6 +66,6 @@ body {
     margin: 5% 2%;
     justify-content: center;
     align-items: center;
-    background-color: rgb(76, 149, 179);
+    background-color: rgb(34, 162, 212); 
     border-radius: 10px;
 }

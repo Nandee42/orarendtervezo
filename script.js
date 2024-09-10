@@ -304,11 +304,14 @@ function drop(ev) {
         courseDiv.data("subjectId", subjectId);
         courseDiv.addClass("added");
         addedCourses.push(course);
+        notify("Course added to timetable!");
     }
     
 }
 function notify(message){
-    
+    const notificationContainer = $(".notificationContainer");
+    const notification = $("<div class='notification'></div>").text(message).fadeOut(3000, function(){  $(this).remove(); });
+    notificationContainer.append(notification);
 }
 
 

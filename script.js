@@ -1,7 +1,7 @@
 $(document).ready(function () {
     // Show all subjects
     subjects.forEach(subject => {
-        const subjectDiv = $("<div class='subject' draggable='true' ondragstart='drag(event)'></div>")
+        const subjectDiv = $("<div class='subject hover-shadow' draggable='true' ondragstart='drag(event)'></div>")
             .text(subject.name)
             .data("id", subject.id)
             .mousedown(function () {
@@ -14,14 +14,10 @@ $(document).ready(function () {
             .on("dragend", function (event) {
                 hideCourses(subject);
             });
-            console.log(subject.id);
 
         $("#subjectContainer").append(subjectDiv);
     });
-    $("#subjectContainer").click(function () {
-        console.log(addedCourses);
-    });
-
+    loadFromLocalStorage();
 });
 
 
@@ -30,18 +26,20 @@ var addedCourses = [];
 const subjects = [
     {
         id: 1,
-        name: "Kalkulus Előadás",
+        name: "Calculus Lecture",
         courses: [
             {
                 id: 1,
-                name: "Kalkulus",
+                subjectId: 1,
+                name: "Calculus Lecture",
                 startTime: "12:00",
                 endTime: "15:00",
                 day: "monday"
             },
             {
                 id: 2,
-                name: "Kalkulus",
+                subjectId: 1,
+                name: "Calculus Lecture",
                 startTime: "8:00",
                 endTime: "11:00",
                 day: "thursday"
@@ -50,39 +48,44 @@ const subjects = [
     },
     {
         id: 2,
-        name: "Kalkulus Gyakorlat",
+        name: "Calculus Practice",
         courses: [
             {
                 id: 3,
-                name: "Kalkulus",
+                subjectId: 2,
+                name: "Calculus Practice",
                 startTime: "9:00",
                 endTime: "11:00",
                 day: "monday"
             },
             {
                 id: 4,
-                name: "Kalkulus",
+                subjectId: 2,
+                name: "Calculus Practice",
                 startTime: "14:00",
                 endTime: "16:00",
                 day: "tuesday"
             },
             {
                 id: 5,
-                name: "Kalkulus",
+                subjectId: 2,
+                name: "Calculus Practice",
                 startTime: "12:00",
                 endTime: "14:00",
                 day: "wednesday"
             },
             {
                 id: 6,
-                name: "Kalkulus",
+                subjectId: 2,
+                name: "Calculus Practice",
                 startTime: "11:00",
                 endTime: "13:00",
                 day: "thursday"
             },
             {
                 id: 7,
-                name: "Kalkulus",
+                subjectId: 2,
+                name: "Calculus Practice",
                 startTime: "18:00",
                 endTime: "20:00",
                 day: "friday"
@@ -91,18 +94,20 @@ const subjects = [
     },
     {
         id: 3,
-        name: "Algebra Előadás",
+        name: "Algebra Practice",
         courses: [
             {
                 id: 8,
-                name: "Algebra",
+                subjectId: 3,
+                name: "Algebra Practice",
                 startTime: "10:00",
                 endTime: "11:00",
                 day: "monday"
             },
             {
                 id: 9,
-                name: "Algebra",
+                subjectId: 3,
+                name: "Algebra Practice",
                 startTime: "13:00",
                 endTime: "14:00",
                 day: "wednesday"
@@ -111,25 +116,28 @@ const subjects = [
     },
     {
         id: 4,
-        name: "Algebra Gyakorlat",
+        name: "Algebra Lecture",
         courses: [
             {
                 id: 10,
-                name: "Algebra",
+                subjectId: 4,
+                name: "Algebra Lecture",
                 startTime: "9:00",
                 endTime: "11:00",
                 day: "tuesday"
             },
             {
                 id: 11,
-                name: "Algebra",
+                subjectId: 4,
+                name: "Algebra Lecture",
                 startTime: "14:00",
                 endTime: "16:00",
-                day: "thursday"
+                day: "wednesday"
             },
             {
                 id: 12,
-                name: "Algebra",
+                subjectId: 4,
+                name: "Algebra Lecture",
                 startTime: "12:00",
                 endTime: "14:00",
                 day: "friday"
@@ -142,16 +150,18 @@ const subjects = [
         courses: [
             {
                 id: 13,
-                name: "Physics",
-                startTime: "10:00",
-                endTime: "12:00",
+                subjectId: 5,
+                name: "Physics Lecture",
+                startTime: "16:00",
+                endTime: "18:00",
                 day: "monday"
             },
             {
                 id: 14,
-                name: "Physics",
-                startTime: "13:00",
-                endTime: "15:00",
+                subjectId: 5,
+                name: "Physics Lecture",
+                startTime: "17:00",
+                endTime: "19:00",
                 day: "wednesday"
             }
         ]
@@ -162,23 +172,130 @@ const subjects = [
         courses: [
             {
                 id: 15,
-                name: "Physics",
+                subjectId: 6,
+                name: "Physics Lab",
                 startTime: "9:00",
                 endTime: "11:00",
-                day: "tuesday"
+                day: "wednesday"
             },
             {
                 id: 16,
-                name: "Physics",
+                subjectId: 6,
+                name: "Physics Lab",
                 startTime: "14:00",
                 endTime: "16:00",
                 day: "thursday"
             },
             {
                 id: 17,
-                name: "Physics",
+                subjectId: 6,
+                name: "Physics Lab",
                 startTime: "12:00",
                 endTime: "14:00",
+                day: "friday"
+            }
+        ]
+    },
+    {
+        id: 7,
+        name: "Chemistry Lecture",
+        courses: [
+            {
+                id: 18,
+                subjectId: 7,
+                name: "Chemistry Lecture",
+                startTime: "18:00",
+                endTime: "20:00",
+                day: "monday"
+            },
+            {
+                id: 19,
+                subjectId: 7,
+                name: "Chemistry Lecture",
+                startTime: "18:00",
+                endTime: "20:00",
+                day: "friday"
+            }
+        ]
+    },
+    {
+        id: 8,
+        name: "Chemistry Lab",
+        courses: [
+            {
+                id: 20,
+                subjectId: 8,
+                name: "Chemistry Lab",
+                startTime: "9:00",
+                endTime: "11:00",
+                day: "tuesday"
+            },
+            {
+                id: 21,
+                subjectId: 8,
+                name: "Chemistry Lab",
+                startTime: "14:00",
+                endTime: "16:00",
+                day: "thursday"
+            },
+            {
+                id: 22,
+                subjectId: 8,
+                name: "Chemistry Lab",
+                startTime: "14:00",
+                endTime: "16:00",
+                day: "friday"
+            }
+        ]
+    },
+    {
+        id: 9,
+        name: "Biology Lecture",
+        courses: [
+            {
+                id: 23,
+                subjectId: 9,
+                name: "Biology Lecture",
+                startTime: "8:00",
+                endTime: "10:00",
+                day: "monday"
+            },
+            {
+                id: 24,
+                subjectId: 9,
+                name: "Biology Lecture",
+                startTime: "9:00",
+                endTime: "11:00",
+                day: "friday"
+            }
+        ]
+    },
+    {
+        id: 10,
+        name: "Biology Lab",
+        courses: [
+            {
+                id: 25,
+                subjectId: 10,
+                name: "Biology Lab",
+                startTime: "9:00",
+                endTime: "11:00",
+                day: "tuesday"
+            },
+            {
+                id: 26,
+                subjectId: 10,
+                name: "Biology Lab",
+                startTime: "12:00",
+                endTime: "14:00",
+                day: "monday"
+            },
+            {
+                id: 27,
+                subjectId: 10,
+                name: "Biology Lab",
+                startTime: "17:00",
+                endTime: "19:00",
                 day: "friday"
             }
         ]
@@ -303,15 +420,145 @@ function drop(ev) {
         courseDiv.data("slot", false);
         courseDiv.data("subjectId", subjectId);
         courseDiv.addClass("added");
+        courseDiv.removeClass("popIn");
+        courseDiv[0].offsetWidth;
+        courseDiv.addClass("popIn");
         addedCourses.push(course);
         notify("Course added to timetable!");
     }
-    
+
 }
-function notify(message){
-    const notificationContainer = $(".notificationContainer");
-    const notification = $("<div class='notification'></div>").text(message).fadeOut(3000, function(){  $(this).remove(); });
-    notificationContainer.append(notification);
+function addCourse(course) {
+    const subject = subjects.find(subject => subject.id === course.subjectId);
+    var courseDiv = $("<div class=\"course added\" id='" + course.id + "' ondrop='drop(event)' ondragover='allowDrop(event)' draggable='true' ondragstart='drag(event)'></div>")
+        .text(course.name)
+        .data("slot", false)
+        .data("subjectId", subject.id)
+        .mousedown(function () {
+            dropSubject(subject);
+            showCourses(subject);
+        })
+        .mouseup(function () {
+            hideCourses(subject);
+        })
+        .on("dragend", function (event) {
+            hideCourses(subject);
+        });
+
+
+    const startTime = parseInt(course.startTime.split(":")[0]);
+    const endTime = parseInt(course.endTime.split(":")[0]);
+    const totalDuration = 20 - 8; // Duration of the day in hours (8:00 - 20:00)
+    // Calculate the percent value of the timestamps
+    const startPercentage = ((startTime - 8) / totalDuration) * 100;
+    const endPercentage = ((endTime - 8) / totalDuration) * 100;
+
+    // Set the position and size of the course div
+    courseDiv.css("top", startPercentage + "%");
+    courseDiv.css("height", endPercentage - startPercentage + "%");
+
+    console.log(course);
+
+    $(`#${course.day}`).append(courseDiv);
+    addedCourses.push(course);
 }
 
+function clearTimetable() {
+    addedCourses = [];
+    $(".course").remove();
+}
+
+function notify(message, wrong = false) {
+    const notificationContainer = $(".notificationContainer");
+    if (wrong){
+        var notification = $("<div class='notification wrong'></div>")
+    }
+    else{
+        var notification = $("<div class='notification'></div>")
+    }
+    notification.text(message).fadeOut(3000, function () { $(this).remove(); });
+    notificationContainer.prepend(notification);
+}
+
+function saveTimetable() {
+    const savedTimetables = JSON.parse(localStorage.getItem("timetables")) || [];
+    if (savedTimetables.length >= 3) {
+        notify("Cannot save more than 3 timetables", true);
+        return;
+    }
+    savedTimetables.push(addedCourses);
+    savedTimetablesDiv = $("<div class='savedTimeTable'><div>")
+        .text(savedTimetables.length)
+        .click(function () {
+            loadTimetable(savedTimetables.length);
+        });
+    deleteButton = $("<div class='deleteTimeTable'>X</div>")
+        .click(function () {
+            deleteSavedTimetable(savedTimetables.length);
+        });
+    savedTimetablesDiv.append(deleteButton);
+    $("#savedTimetables").append(savedTimetablesDiv);
+    localStorage.setItem("timetables", JSON.stringify(savedTimetables));
+    notify("Timetable saved successfully");
+}
+
+function loadTimetable(number) {
+    clearTimetable();
+    const savedTimetables = JSON.parse(localStorage.getItem("timetables")) || [];
+    if (number < 1 || number > 3) {
+        notify("Invalid timetable number", true);
+        return;
+    }
+    if (savedTimetables.length < number) {
+        notify("Timetable not found", true);
+        return;
+    }
+    savedTimetables[number - 1].forEach(course => {
+        addCourse(course);
+    });
+}
+function deleteSavedTimetable(number) {
+    const savedTimetables = JSON.parse(localStorage.getItem("timetables")) || [];
+    if (number < 1 || number > 3) {
+        notify("Invalid timetable number", true);
+        return;
+    }
+    if (savedTimetables.length < number) {
+        notify("Timetable not found", true);
+        return;
+    }
+    savedTimetables.splice(number - 1, 1);
+    localStorage.setItem("timetables", JSON.stringify(savedTimetables));
+    notify("Timetable deleted successfully");
+    $(".savedTimeTable").remove();
+    savedTimetables.forEach((timetable, index) => {
+        savedTimetablesDiv = $("<div class='savedTimeTable'><div>")
+            .text(index + 1)
+            .click(function () {
+                loadTimetable(index + 1);
+            });
+        deleteButton = $("<div class='deleteTimeTable'>X</div>")
+            .click(function () {
+                deleteSavedTimetable(index + 1);
+            });
+        savedTimetablesDiv.append(deleteButton);
+        $("#savedTimetables").append(savedTimetablesDiv);
+    });
+}
+function loadFromLocalStorage() {
+    const savedTimetables = JSON.parse(localStorage.getItem("timetables")) || [];
+    savedTimetables.forEach((timetable, index) => {
+        savedTimetablesDiv = $("<div class='savedTimeTable'><div>")
+            .text(index + 1)
+            .click(function () {
+                loadTimetable(index + 1);
+            });
+        deleteButton = $("<div class='deleteTimeTable'>X</div>")
+            .click(function () {
+                deleteSavedTimetable(index + 1);
+            });
+        savedTimetablesDiv.append(deleteButton);
+        $("#savedTimetables").append(savedTimetablesDiv);
+    });
+}
 

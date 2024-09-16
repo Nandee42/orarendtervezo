@@ -21,11 +21,21 @@
     <div class="notificationContainer">
         
     </div>
-    <div id="subjectContainer">
+    <div id="subjectPanel">
+        <header id="subjectsHeader">Subjects</header>
+        <div id="subjectContainer">
         
+        </div>
     </div>
+    
     <div id="timeTable">
-        <div id="timeTableHeader">Timetable</div>
+        <div id="timeTableHeader">
+            <div id="savebar">
+                <div id="savedTimetables"></div>
+                <div id="saveButton" onclick="saveTimetable()">Save</div>
+            </div>
+            <div id="timeTableTitle">Timetable</div>
+        </div>
         <div id="timeTableDays">
             <div class="day" id="monday"></div>
             <div class="day" id="tuesday"></div>
